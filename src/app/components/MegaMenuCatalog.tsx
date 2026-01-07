@@ -56,7 +56,9 @@ export default function MegaMenuCatalog({ open, onClose }: Props) {
         );
 
         const prods = await request<PagedResponse<ProductoListItemDto>>(
-          `/api/productos?page=1&pageSize=10&search=${encodeURIComponent(term)}&sortBy=fechaCreacion&sortDir=desc`,
+          `/api/productos?page=1&pageSize=10&search=${encodeURIComponent(
+            term
+          )}&sortBy=fechaCreacion&sortDir=desc`,
           { token, method: "GET" }
         );
 
@@ -75,7 +77,9 @@ export default function MegaMenuCatalog({ open, onClose }: Props) {
       open={open}
       onClose={onClose}
       placement="top"
-      height="88vh"
+      // ✅ height está deprecado en AntD: usar size + styles.wrapper
+      size="large"
+      styles={{ wrapper: { height: "88vh" } }}
       title={
         <Space>
           <SearchOutlined />
@@ -96,8 +100,15 @@ export default function MegaMenuCatalog({ open, onClose }: Props) {
                     <Space>
                       <FolderOpenOutlined />
                       <Typography.Text strong>{c.nombre}</Typography.Text>
-                      {c.activo ? <Tag color="green">{t("common.active")}</Tag> : <Tag color="red">{t("common.no")}</Tag>}
+
+                      {c.activo ? (
+                        <Tag color="green">{t("common.active")}</Tag>
+                      ) : (
+                        <Tag color="red">{t("common.no")}</Tag>
+                      )}
+
                       <Typography.Text type="secondary">#{c.idCategoria}</Typography.Text>
+
                       <Link href={`/productos?idCategoria=${c.idCategoria}`} onClick={onClose}>
                         {t("products.viewProducts")}
                       </Link>

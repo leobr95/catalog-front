@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card, Space, Button, Table, Input, Tag } from "antd";
+import { Card, Space, Button, Table, Input, Tag, Skeleton } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { PlusOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
@@ -19,25 +19,45 @@ import CategoriaFormModal from "@/app/components/categorias/CategoriaFormModal";
 import { showError } from "@/app/lib/alerts";
 import type { CategoriaDto } from "@/app/types/api";
 
+// (Opcional pero recomendado para Vercel/Next cuando intenta pre-render estático)
+// export const dynamic = "force-dynamic";
+
 export default function CategoriasPage() {
   const { t } = useTranslation();
-
   const dispatch = useAppDispatch();
-  const token = useAppSelector(selectToken);
 
+  const token = useAppSelector(selectToken);
   const data = useAppSelector(selectCategorias);
   const loading = useAppSelector(selectCategoriasLoading);
+
+  const [mounted, setMounted] = React.useState(false);
 
   const [openForm, setOpenForm] = React.useState(false);
   const [editItem, setEditItem] = React.useState<CategoriaDto | null>(null);
   const [search, setSearch] = React.useState("");
 
+  // ✅ Mount gate: evita mismatch SSR vs Client
   React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  React.useEffect(() => {
+    if (!mounted) return;
     if (!token) return;
+
     dispatch(fetchCategorias({ includeInactive: true, search: null })).catch((e) =>
       showError(t("errors.genericTitle"), e)
     );
-  }, [dispatch, token, t]);
+  }, [dispatch, mounted, token, t]);
+
+  // ✅ Mientras se monta (server + primer render cliente) => mismo HTML
+  if (!mounted) {
+    return (
+      <Card>
+        <Skeleton active />
+      </Card>
+    );
+  }
 
   const columns: ColumnsType<CategoriaDto> = [
     { title: t("common.id"), dataIndex: "idCategoria", width: 90 },
@@ -48,11 +68,7 @@ export default function CategoriasPage() {
       dataIndex: "activo",
       width: 110,
       render: (v) =>
-        v ? (
-          <Tag color="green">{t("common.yes")}</Tag>
-        ) : (
-          <Tag color="red">{t("common.no")}</Tag>
-        ),
+        v ? <Tag color="green">{t("common.yes")}</Tag> : <Tag color="red">{t("common.no")}</Tag>,
     },
     {
       title: t("common.actions"),
@@ -70,11 +86,7 @@ export default function CategoriasPage() {
             {t("common.edit")}
           </Button>
 
-          <Button
-            size="small"
-            danger
-            onClick={() => dispatch(uiActions.openDeleteCategoria(r.idCategoria))}
-          >
+          <Button size="small" danger onClick={() => dispatch(uiActions.openDeleteCategoria(r.idCategoria))}>
             {t("common.delete")}
           </Button>
         </Space>

@@ -80,7 +80,9 @@ export default function ProductoFormModal({ open, onClose, categorias, initial }
     return [{ label: `${nombre} (#${id})`, value: id }];
   });
 
-  const title = isEdit ? t("products.editTitle", { defaultValue: "Editar producto" }) : t("products.newTitle", { defaultValue: "Nuevo producto" });
+  const title = isEdit
+    ? t("products.editTitle", { defaultValue: "Editar producto" })
+    : t("products.newTitle", { defaultValue: "Nuevo producto" });
 
   return (
     <Modal
@@ -88,7 +90,7 @@ export default function ProductoFormModal({ open, onClose, categorias, initial }
       onCancel={onClose}
       footer={null}
       title={title}
-      destroyOnClose
+      destroyOnHidden
       width={720}
     >
       <Form<ProductoFormValues>
@@ -97,7 +99,9 @@ export default function ProductoFormModal({ open, onClose, categorias, initial }
         onFinish={async (v) => {
           try {
             if (typeof v.idCategoria !== "number") {
-              throw new Error(t("products.category", { defaultValue: "Categoría" }) + " " + t("auth.passwordRequired", { defaultValue: "requerida" }));
+              throw new Error(
+                t("products.categoryReq", { defaultValue: "Categoría requerida" })
+              );
             }
 
             const dto: ProductoCreateUpdateDto = {
@@ -180,13 +184,17 @@ export default function ProductoFormModal({ open, onClose, categorias, initial }
             ]}
           >
             <Select
-              placeholder={t("products.filters.allCategories", { defaultValue: "Selecciona" })}
+              placeholder={t("products.categoriaPh", { defaultValue: "Selecciona" })}
               options={categoryOptions}
             />
           </Form.Item>
         </div>
 
-        <Form.Item name="activo" label={t("common.active", { defaultValue: "Activo" })} valuePropName="checked">
+        <Form.Item
+          name="activo"
+          label={t("common.active", { defaultValue: "Activo" })}
+          valuePropName="checked"
+        >
           <Switch />
         </Form.Item>
 

@@ -51,7 +51,6 @@ export default function LoginModal() {
   const t = useTexts(lang);
 
   const open = useAppSelector((s) => s.ui.loginOpen);
-
   const loading = useAppSelector(selectAuthLoading);
 
   const [tab, setTab] = React.useState<TabKey>("login");
@@ -61,6 +60,8 @@ export default function LoginModal() {
   React.useEffect(() => {
     if (!open) return;
     setTab("login");
+
+    // ✅ ahora NO da warning porque los Forms estarán montados (forceRender en Tabs)
     loginForm.resetFields();
     regForm.resetFields();
   }, [open, loginForm, regForm]);
@@ -68,7 +69,14 @@ export default function LoginModal() {
   const close = () => dispatch(uiActions.closeLogin());
 
   return (
-    <Modal open={open} onCancel={close} footer={null} title={t.title} destroyOnClose>
+    <Modal
+      open={open}
+      onCancel={close}
+      footer={null}
+      title={t.title}
+      // ✅ destroyOnClose deprecated
+      destroyOnHidden
+    >
       <Typography.Paragraph type="secondary" style={{ marginTop: -6 }}>
         {t.hint}
       </Typography.Paragraph>
@@ -80,6 +88,8 @@ export default function LoginModal() {
           {
             key: "login",
             label: t.login,
+            // ✅ asegura que el Form se monte aunque el tab no esté activo
+            forceRender: true,
             children: (
               <Form
                 form={loginForm}
@@ -114,6 +124,8 @@ export default function LoginModal() {
           {
             key: "register",
             label: t.register,
+            // ✅ asegura que el Form se monte aunque el tab no esté activo
+            forceRender: true,
             children: (
               <Form
                 form={regForm}
