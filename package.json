@@ -9,9 +9,19 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "@reduxjs/toolkit": "^2.11.2",
+    "antd": "^6.1.4",
+    "i18next": "^25.7.3",
+    "i18next-browser-languagedetector": "^8.2.0",
     "next": "16.1.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-i18next": "^16.5.1",
+    "react-markdown": "^10.1.0",
+    "react-redux": "^9.2.0",
+    "remark-gfm": "^4.0.1",
+    "sweetalert2": "^11.26.17"
   },
   "devDependencies": {
     "@types/node": "^20",

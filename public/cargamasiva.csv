@@ -1,0 +1,31 @@
+Sku,Nombre,Descripcion,Precio,Stock,IdCategoria,Activo
+DOT-OVR-DRI-001,Overol dril azul,Overol industrial en dril 8oz con cierre reforzado talla surtida,129900,40,1,true
+DOT-OVR-DRI-002,Overol dril gris,Overol industrial dril 8oz doble costura talla surtida,129900,35,1,true
+DOT-OVR-DRI-003,Overol dril caqui,Overol dril resistente con bolsillos multiuso talla surtida,134900,30,1,true
+DOT-OVR-DRI-004,Overol ignífugo,Overol FR para trabajo en riesgo térmico con cinta reflectiva,289900,15,1,true
+DOT-PAN-DRI-001,Pantalón dril azul,Pantalón industrial dril 8oz pretina reforzada,89900,60,1,true
+DOT-PAN-DRI-002,Pantalón dril gris,Pantalón dril resistente con bolsillos laterales,89900,55,1,true
+DOT-PAN-DRI-003,Pantalón dril caqui,Pantalón dril pesado para obra y bodega,94900,50,1,true
+DOT-PAN-LIN-001,Pantalón lino beige,Pantalón lino para dotación administrativa (ligero y fresco),109900,30,1,true
+DOT-PAN-LIN-002,Pantalón lino gris,Pantalón lino dotación oficina corte clásico,109900,28,1,true
+DOT-CAM-POLO-001,Camiseta polo corporativa,Polo piqué bordable para uniforme empresarial,69900,100,1,true
+DOT-CAM-POLO-002,Camiseta polo deportiva,Polo poliéster secado rápido para logística,64900,90,1,true
+DOT-CAM-ALG-001,Camiseta algodón básica,Camiseta 100% algodón para dotación general,39900,150,1,true
+DOT-CAM-ALG-002,Camiseta algodón cuello V,Camiseta algodón cuello V para dotación administrativa,42900,120,1,true
+DOT-CAM-MAN-001,Camisa manga larga Oxford,Camisa Oxford corporativa para oficina y ventas,119900,45,1,true
+DOT-CAM-MAN-002,Camisa manga corta Oxford,Camisa Oxford manga corta para clima cálido,114900,40,1,true
+DOT-CHA-IMPR-001,Chaqueta impermeable,Chaqueta impermeable con capota para mensajería y bodega,179900,25,1,true
+DOT-CHA-IMPR-002,Chaqueta rompevientos,Rompevientos liviano para dotación logística,139900,30,1,true
+DOT-CHA-ACOL-001,Chaqueta acolchada,Chaqueta térmica para cámaras frías y turnos nocturnos,219900,18,1,true
+DOT-CHA-REFL-001,Chaqueta reflectiva,Chaqueta con cinta reflectiva alta visibilidad,199900,20,1,true
+DOT-CHL-REFL-001,Chaleco reflectivo,Chaleco alta visibilidad tipo malla con cinta,29900,120,1,true
+DOT-CHL-MULT-001,Chaleco multibolsillos,Chaleco para brigada y supervisión con varios bolsillos,79900,50,1,true
+DOT-BAT-DRI-001,Bata laboratorio dril,Bata laboratorio en dril resistente color blanco,89900,35,1,true
+DOT-DEL-LON-001,Delantal lona,Delantal lona industrial para cocina/producción,54900,45,1,true
+DOT-GOR-001,Gorra corporativa,Gorra bordable ajustable para dotación,19900,200,1,true
+DOT-BUF-001,Bufanda tubular,Buff multifuncional para dotación exterior,15900,150,1,true
+EPP-GUA-NIT-001,Guantes nitrilo caja x100,Guantes desechables nitrilo (tallas S-M-L) caja x100,49900,80,1,true
+EPP-GUA-COR-001,Guantes anticorte nivel 5,Guante anticorte para manejo de vidrio y metal,34900,70,1,true
+EPP-CAS-001,Casco de seguridad,Casco industrial con ajuste tipo ratchet certificado,45900,60,1,true
+EPP-GAF-001,Gafas de seguridad,Gafas antiempañante protección ocular UV,16900,120,1,true
+EPP-TAP-001,Tapon auditivo x10 pares,Tapón auditivo espuma para reducción de ruido paquete x10,12900,200,1,true
