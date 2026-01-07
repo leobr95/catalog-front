@@ -1,12 +1,14 @@
 "use client";
 
 import React from "react";
-import { Card, Space, Button, Table, Input, Select, InputNumber, Tag } from "antd";
+import { Suspense } from "react";
+import { Card, Space, Button, Table, Input, Select, InputNumber, Tag, Skeleton } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { TableProps } from "antd";
 import { PlusOutlined, UploadOutlined, ReloadOutlined } from "@ant-design/icons";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useTranslation } from "react-i18next";
+// Si usas i18n en esta página, puedes dejarlo:
+// import { useTranslation } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import {
@@ -26,12 +28,13 @@ import BulkImportModal from "@/app/components/productos/BulkImportModal";
 import { showError } from "@/app/lib/alerts";
 import type { ProductoListItemDto } from "@/app/types/api";
 
-export default function ProductosPage() {
-  const { t } = useTranslation();
+function ProductosInner() {
+  // Si usas i18n en esta página:
+  // const { t } = useTranslation();
 
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const sp = useSearchParams();
+  const sp = useSearchParams(); // ✅ AHORA está dentro de Suspense
 
   const token = useAppSelector(selectToken);
 
@@ -67,7 +70,7 @@ export default function ProductosPage() {
 
   React.useEffect(() => {
     if (!token) return;
-    dispatch(fetchProductos()).catch((e) => showError(t("errors.genericTitle"), e));
+    dispatch(fetchProductos()).catch((e) => showError("Error", e));
   }, [
     dispatch,
     token,
@@ -80,40 +83,33 @@ export default function ProductosPage() {
     query.activo,
     query.sortBy,
     query.sortDir,
-    t,
   ]);
 
   const columns: ColumnsType<ProductoListItemDto> = [
-    { title: t("common.id"), dataIndex: "idProducto", width: 90 },
+    { title: "ID", dataIndex: "idProducto", width: 90 },
     {
-      title: t("products.sku"),
+      title: "SKU",
       dataIndex: "sku",
       width: 140,
-      render: (v) =>
-        typeof v === "string" && v.trim() ? v : <span style={{ opacity: 0.6 }}>—</span>,
+      render: (v) => (typeof v === "string" && v.trim() ? v : <span style={{ opacity: 0.6 }}>—</span>),
     },
-    { title: t("common.name"), dataIndex: "nombre" },
+    { title: "Nombre", dataIndex: "nombre" },
     {
-      title: t("products.price"),
+      title: "Precio",
       dataIndex: "precio",
       width: 140,
       render: (v) => (typeof v === "number" ? v.toLocaleString("es-CO") : v),
       sorter: true,
     },
-    { title: t("products.stock"), dataIndex: "stock", width: 120, sorter: true },
+    { title: "Stock", dataIndex: "stock", width: 120, sorter: true },
     {
-      title: t("common.active"),
+      title: "Activo",
       dataIndex: "activo",
       width: 110,
-      render: (v) =>
-        v ? (
-          <Tag color="green">{t("common.yes")}</Tag>
-        ) : (
-          <Tag color="red">{t("common.no")}</Tag>
-        ),
+      render: (v) => (v ? <Tag color="green">Sí</Tag> : <Tag color="red">No</Tag>),
     },
     {
-      title: t("common.actions"),
+      title: "Acciones",
       key: "actions",
       width: 170,
       render: (_, r) => (
@@ -125,15 +121,11 @@ export default function ProductosPage() {
               setOpenForm(true);
             }}
           >
-            {t("common.edit")}
+            Editar
           </Button>
 
-          <Button
-            size="small"
-            danger
-            onClick={() => dispatch(uiActions.openDeleteProducto(r.idProducto))}
-          >
-            {t("common.delete")}
+          <Button size="small" danger onClick={() => dispatch(uiActions.openDeleteProducto(r.idProducto))}>
+            Eliminar
           </Button>
         </Space>
       ),
@@ -171,7 +163,7 @@ export default function ProductosPage() {
   };
 
   const categoriaOptions = [
-    { label: t("products.filters.allCategories"), value: "ALL" },
+    { label: "Todas", value: "ALL" },
     ...categorias.map((c) => ({
       label: `${c.nombre} (#${c.idCategoria})`,
       value: String(c.idCategoria),
@@ -181,10 +173,10 @@ export default function ProductosPage() {
   if (!token) {
     return (
       <Card>
-        <h2>{t("products.title")}</h2>
-        <p>{t("auth.needTokenTitle")}</p>
+        <h2>Productos</h2>
+        <p>Necesitas generar un token JWT para consumir la API (demo).</p>
         <Button type="primary" onClick={() => dispatch(uiActions.openLogin())}>
-          {t("auth.login")}
+          Generar token
         </Button>
       </Card>
     );
@@ -193,17 +185,15 @@ export default function ProductosPage() {
   return (
     <>
       <Card
-        title={t("products.title")}
+        title="Productos"
         extra={
           <Space>
             <Button icon={<ReloadOutlined />} onClick={() => dispatch(fetchProductos())}>
-              {t("common.refresh")}
+              Refrescar
             </Button>
-
             <Button icon={<UploadOutlined />} onClick={() => setOpenImport(true)}>
-              {t("products.import")}
+              Importar (CSV/XLSX)
             </Button>
-
             <Button
               type="primary"
               icon={<PlusOutlined />}
@@ -212,7 +202,7 @@ export default function ProductosPage() {
                 setOpenForm(true);
               }}
             >
-              {t("common.new")}
+              Nuevo
             </Button>
           </Space>
         }
@@ -220,7 +210,7 @@ export default function ProductosPage() {
         <Space wrap style={{ marginBottom: 12 }}>
           <Input
             style={{ width: 260 }}
-            placeholder={t("common.searchPlaceholder")}
+            placeholder="Buscar…"
             value={query.search ?? ""}
             onChange={(e) =>
               dispatch(productosActions.setQuery({ ...query, page: 1, search: e.target.value || null }))
@@ -247,7 +237,7 @@ export default function ProductosPage() {
 
           <InputNumber
             style={{ width: 160 }}
-            placeholder={t("products.filters.priceMin")}
+            placeholder="Precio mín"
             value={query.precioMin ?? undefined}
             min={0}
             onChange={(v) =>
@@ -257,7 +247,7 @@ export default function ProductosPage() {
 
           <InputNumber
             style={{ width: 160 }}
-            placeholder={t("products.filters.priceMax")}
+            placeholder="Precio máx"
             value={query.precioMax ?? undefined}
             min={0}
             onChange={(v) =>
@@ -269,9 +259,9 @@ export default function ProductosPage() {
             style={{ width: 160 }}
             value={query.activo === null ? "ALL" : query.activo ? "true" : "false"}
             options={[
-              { label: t("products.filters.statusAll"), value: "ALL" },
-              { label: t("products.filters.statusActive"), value: "true" },
-              { label: t("products.filters.statusInactive"), value: "false" },
+              { label: "Todos", value: "ALL" },
+              { label: "Activos", value: "true" },
+              { label: "Inactivos", value: "false" },
             ]}
             onChange={(v) => {
               const activo = v === "ALL" ? null : v === "true";
@@ -283,9 +273,9 @@ export default function ProductosPage() {
             style={{ width: 180 }}
             value={query.sortBy}
             options={[
-              { label: t("products.filters.sortDate"), value: "fechaCreacion" },
-              { label: t("products.filters.sortName"), value: "nombre" },
-              { label: t("products.filters.sortPrice"), value: "precio" },
+              { label: "Fecha creación", value: "fechaCreacion" },
+              { label: "Nombre", value: "nombre" },
+              { label: "Precio", value: "precio" },
             ]}
             onChange={(v) => dispatch(productosActions.setQuery({ ...query, page: 1, sortBy: v }))}
           />
@@ -294,8 +284,8 @@ export default function ProductosPage() {
             style={{ width: 140 }}
             value={query.sortDir}
             options={[
-              { label: t("products.filters.desc"), value: "desc" },
-              { label: t("products.filters.asc"), value: "asc" },
+              { label: "Desc", value: "desc" },
+              { label: "Asc", value: "asc" },
             ]}
             onChange={(v) => dispatch(productosActions.setQuery({ ...query, page: 1, sortDir: v }))}
           />
@@ -316,14 +306,22 @@ export default function ProductosPage() {
         />
       </Card>
 
-      <ProductoFormModal
-        open={openForm}
-        onClose={() => setOpenForm(false)}
-        categorias={categorias}
-        initial={editItem}
-      />
-
+      <ProductoFormModal open={openForm} onClose={() => setOpenForm(false)} categorias={categorias} initial={editItem} />
       <BulkImportModal open={openImport} onClose={() => setOpenImport(false)} />
     </>
+  );
+}
+
+export default function ProductosPage() {
+  return (
+    <Suspense
+      fallback={
+        <Card title="Productos">
+          <Skeleton active />
+        </Card>
+      }
+    >
+      <ProductosInner />
+    </Suspense>
   );
 }
